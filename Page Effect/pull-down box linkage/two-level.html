@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Jquery实现下拉框二级联动效果</title>
+  <script src="http://cdn.bootcss.com/jquery/2.2.4/jquery.js"></script>
+</head>
+<body>
+<label for="grade">年级</label>
+<select name="grade" id="grade">
+  <option value="-1">请选择</option>
+</select>
+<br>
+<label for="subject">学科</label>
+<select name="subject" id="subject">
+  <option value="-1">请选择</option>
+</select>
+</body>
+<script>
+  $(function(){
+    let data = getData();
+    let grade = data.grade,
+            subject = data.subject,
+            map = data.map;
+    let obj_map = eval(map);
+    for (let grade_id in obj_map) {
+      $("#grade").append(`<option value="${grade_id}">${grade[grade_id]}</option>`);
+    }
+    $("#grade").change(function() {
+      let cur_grade = $(this).val();
+      $("#subject").html('<option value="-1">请选择</option>');
+      console.log(obj_map[cur_grade]);
+      for (let index in obj_map[cur_grade]) {
+        let cur_subject = obj_map[cur_grade][index];
+        $("#subject").append(`<option value="${cur_subject}">${subject[cur_subject]}</option>`);
+      }
+    });
+  });
+
+  function getData() {
+    let data = [];
+    $.ajaxSettings.async = false;
+    $.get('./data.json', {}, function(ret) {
+      if (ret) {
+        console.log(ret);
+        data = ret;
+      } else {
+        alert('failed');
+      }
+    });
+    $.ajaxSettings.async = true;
+    return data;
+  }
+</script>
+</html>
